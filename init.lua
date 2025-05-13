@@ -102,10 +102,10 @@ local sign = function(opts)
   })
 end
 
-sign({name = 'DiagnosticSignError', text = ''})
-sign({name = 'DiagnosticSignWarn', text = ''})
-sign({name = 'DiagnosticSignHint', text = ''})
-sign({name = 'DiagnosticSignInfo', text = ''})
+sign({name = 'DiagnosticSignError', text = '⛔'})
+sign({name = 'DiagnosticSignWarn', text = '⚠️'})
+sign({name = 'DiagnosticSignHint', text = '❔'})
+sign({name = 'DiagnosticSignInfo', text = 'ℹ️'})
 
 vim.diagnostic.config({
     virtual_text = false,
@@ -225,33 +225,54 @@ require("codecompanion").setup({
       'nvim-lua/plenary.nvim',
       'nvim-treesitter/nvim-treesitter',
     },
-  strategies = {
+    strategies = {
         -- Change the default chat adapter
         chat = {
-          adapter = 'gemma3',
-          inline = 'gemma3',
+            adapter = "openai",
         },
-      },
-      adapters = {
-        qwen = function()
-          return require('codecompanion.adapters').extend('ollama', {
-            name = 'gemma3', -- Give this adapter a different name to differentiate it from the default ollama adapter
-            schema = {
-              model = {
-                default = 'gemma3:latest',
-              },
+        inline = {
+            adapter = "openai",
+        },
+        cmd = {
+            adapter = "gemma3",
+        }
+    },
+    adapters = {
+        openai = function()
+            return require("codecompanion.adapters").extend("openai", {
+                schema = {
+            model = {
+                default = "gpt-4o",
+                choices = {
+                    "gpt-4o",
+                    "o1-mini",
+                }
             },
-          })
+            },
+        })
         end,
-      },
-  opts = {
+        gemma3 = function()
+            return require('codecompanion.adapters').extend('ollama', {
+                name = 'gemma3',
+                schema = {
+                    model = {
+                        default = 'gemma3:latest',
+                        choices = {
+                            'gemma3:latest',
+                        }
+                    },
+                },
+            })
+            end,
+    },
+    opts = {
         log_level = "DEBUG",
-      },
-  display = {
-	chat = {
-		window = {
-    		position = "right", -- "left" (default), "right", "top", or "bottom"
-  		},
-	},
-  }
+    },
+    display = {
+	    chat = {
+		    window = {
+    		    position = "right", -- "left" (default), "right", "top", or "bottom"
+  		    },
+	    },
+    }
 })
