@@ -1,4 +1,7 @@
 -- init.lua
+vim.opt.tabstop = 4      -- Number of visual spaces per TAB
+vim.opt.shiftwidth = 4   -- Number of spaces for each indentation level
+vim.opt.expandtab = true -- Convert TAB to spaces
 vim.cmd [[packadd packer.nvim]]
 vim.opt.relativenumber = true
 require('packer').startup(function(use)
@@ -37,16 +40,26 @@ require('packer').startup(function(use)
       'nvim-tree/nvim-web-devicons', -- optional
     },
   }
+  use {
+   "olimorris/codecompanion.nvim",
+   config = function()
+     require("codecompanion").setup()
+   end,
+   requires = {
+     "nvim-lua/plenary.nvim",
+     "nvim-treesitter/nvim-treesitter",
+   }
+ }
 end)
 
 -- Mason Setup
 require("mason").setup({
     ui = {
         icons = {
-            package_installed = "",
-            package_pending = "",
-            package_uninstalled = "",
-        },
+        	package_installed = "✓",
+      		package_pending = "➜",
+      		package_uninstalled = "✗"
+	},
     }
 })
 require("mason-lspconfig").setup()
@@ -66,6 +79,18 @@ rt.setup({
     end,
   },
 })
+
+-- Format Document LSP
+vim.api.nvim_create_user_command("Format", function()
+  local clients = vim.lsp.get_clients({ bufnr = 0 })
+  for _, client in ipairs(clients) do
+    if client.server_capabilities.documentFormattingProvider then
+      vim.lsp.buf.format()
+      return
+    end
+  end
+  print("No LSP server attached that supports formatting")
+end, { desc = "Format current buffer using LSP" })
 
 
 -- LSP Diagnostics Options Setup 
@@ -193,3 +218,40 @@ require("nvim-tree").setup({
   },
 })
 
+
+-- Codecompanion
+require("codecompanion").setup({
+    dependencies = {
+      'nvim-lua/plenary.nvim',
+      'nvim-treesitter/nvim-treesitter',
+    },
+  strategies = {
+        -- Change the default chat adapter
+        chat = {
+          adapter = 'gemma3',
+          inline = 'gemma3',
+        },
+      },
+      adapters = {
+        qwen = function()
+          return require('codecompanion.adapters').extend('ollama', {
+            name = 'gemma3', -- Give this adapter a different name to differentiate it from the default ollama adapter
+            schema = {
+              model = {
+                default = 'gemma3:latest',
+              },
+            },
+          })
+        end,
+      },
+  opts = {
+        log_level = "DEBUG",
+      },
+  display = {
+	chat = {
+		window = {
+    		position = "right", -- "left" (default), "right", "top", or "bottom"
+  		},
+	},
+  }
+})
