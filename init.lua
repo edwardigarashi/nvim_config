@@ -7,7 +7,6 @@ vim.opt.relativenumber = true
 require('packer').startup(function(use)
   -- Packer manages itself
   use 'wbthomason/packer.nvim'
-
   -- Add your other plugins here, for example:
   use 'nvim-treesitter/nvim-treesitter'
   use 'neovim/nvim-lspconfig'
@@ -36,9 +35,6 @@ require('packer').startup(function(use)
   use {'iamcco/markdown-preview.nvim', run = 'cd app && npm install'}
   use {
     'nvim-tree/nvim-tree.lua',
-    requires = {
-      'nvim-tree/nvim-web-devicons', -- optional
-    },
   }
   use {
    "olimorris/codecompanion.nvim",
@@ -213,6 +209,31 @@ require("nvim-tree").setup({
   },
   renderer = {
     group_empty = true,
+    icons = {
+      webdev_colors = false,
+      show = { file = true, folder = true, folder_arrow = true, git = true },
+      glyphs = {
+        default   = "📄",
+        symlink   = "🔗",
+        folder = {
+          arrow_closed = "▶",
+          arrow_open   = "▼",
+          default       = "📁",
+          open          = "📂",
+          empty         = "🗋",
+          empty_open    = "🗁",
+        },
+        git = {
+          unstaged  = "✗",
+          staged    = "✓",
+          unmerged  = "═",
+          renamed   = "➜",
+          untracked = "★",
+          deleted   = "🗑️",
+          ignored   = "◌",
+        },
+      },
+    },
   },
   filters = {
     dotfiles = true,
