@@ -233,8 +233,8 @@ cmp.setup({
 })
 
 -- Treesitter
-require("nvim-treesitter.configs").setup({
-  ensure_installed = { "lua", "rust", "toml", "vim", "vimdoc" },
+require('nvim-treesitter.configs').setup {
+  ensure_installed = { "lua", "rust", "toml" },
   auto_install = true,
   highlight = {
     enable = true,
@@ -243,7 +243,12 @@ require("nvim-treesitter.configs").setup({
   indent = {
     enable = true,
   },
-})
+  rainbow = {
+    enable = true,
+    extended_mode = true,
+    max_file_lines = nil,
+  },
+}
 
 -- Telescope
 require("telescope").setup({})
