@@ -22,10 +22,10 @@ require("packer").startup(function(use)
 
   -- Treesitter
   use {
-    "nvim-treesitter/nvim-treesitter",
-    run = ":TSUpdate",
+    'nvim-treesitter/nvim-treesitter',
+    branch = 'master',
+    run = ':TSUpdate',
   }
-
   -- Completion
   use "hrsh7th/nvim-cmp"
   use "hrsh7th/cmp-nvim-lsp"
@@ -233,22 +233,25 @@ cmp.setup({
 })
 
 -- Treesitter
-require('nvim-treesitter.configs').setup {
-  ensure_installed = { "lua", "rust", "toml" },
-  auto_install = true,
-  highlight = {
-    enable = true,
-    additional_vim_regex_highlighting = false,
-  },
-  indent = {
-    enable = true,
-  },
-  rainbow = {
-    enable = true,
-    extended_mode = true,
-    max_file_lines = nil,
-  },
-}
+local ok, ts_configs = pcall(require, "nvim-treesitter.configs")
+if ok then
+  ts_configs.setup({
+    ensure_installed = { "lua", "rust", "toml" },
+    auto_install = true,
+    highlight = {
+      enable = true,
+      additional_vim_regex_highlighting = false,
+    },
+    indent = {
+      enable = true,
+    },
+    rainbow = {
+      enable = true,
+      extended_mode = true,
+      max_file_lines = nil,
+    },
+  })
+end
 
 -- Telescope
 require("telescope").setup({})
