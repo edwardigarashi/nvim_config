@@ -3,8 +3,8 @@
 --------------------------------------------------
 -- Core options
 --------------------------------------------------
-vim.opt.tabstop = 4
-vim.opt.shiftwidth = 4
+vim.opt.tabstop = 2
+vim.opt.shiftwidth = 2
 vim.opt.expandtab = true
 vim.opt.relativenumber = true
 vim.opt.number = true
@@ -91,16 +91,6 @@ require("packer").startup(function(use)
   -- File tree
   ------------------------------------------------
   use "nvim-tree/nvim-tree.lua"
-  ------------------------------------------------
-  -- AI
-  ------------------------------------------------
-  use {
-    "olimorris/codecompanion.nvim",
-    requires = {
-      "nvim-lua/plenary.nvim",
-      "nvim-treesitter/nvim-treesitter",
-    },
-  }
 
   ------------------------------------------------
   -- Folding
@@ -461,62 +451,6 @@ require("nvim-tree").setup({
 vim.keymap.set("n", "<leader>tt", "<cmd>NvimTreeToggle<CR>", {
   silent = true,
   desc = "Toggle tree",
-})
-
---------------------------------------------------
--- CodeCompanion
---------------------------------------------------
-require("codecompanion").setup({
-  strategies = {
-    chat = {
-      adapter = "openai",
-    },
-    inline = {
-      adapter = "openai",
-    },
-    cmd = {
-      adapter = "gemma3",
-    },
-  },
-  adapters = {
-    openai = function()
-      return require("codecompanion.adapters").extend("openai", {
-        schema = {
-          model = {
-            default = "gpt-4o",
-            choices = {
-              "gpt-4o",
-              "o1-mini",
-            },
-          },
-        },
-      })
-    end,
-
-    gemma3 = function()
-      return require("codecompanion.adapters").extend("ollama", {
-        name = "gemma3",
-        schema = {
-          model = {
-            default = "gemma3:latest",
-            choices = {
-              "gemma3:latest",
-            },
-          },
-        },
-      })
-    end,
-  },
-  opts = {
-    log_level = "DEBUG",
-  },
-  display = {
-    chat = {
-      window = {
-        position = "right",
-      },
-    },
-  },
 })
 
 --------------------------------------------------
